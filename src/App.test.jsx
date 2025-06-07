@@ -20,7 +20,7 @@ describe("App Component", () => {
 
     const incrementButton = screen.getByText("+");
     const decrementButton = screen.getByText("-");
-    const resetButton = screen.getByText("Reset");
+    const resetButton = screen.getByText("Reseter");
 
     expect(incrementButton).toBeInTheDocument();
     expect(decrementButton).toBeInTheDocument();
