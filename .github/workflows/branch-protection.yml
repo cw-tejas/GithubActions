@@ -1,0 +1,57 @@
+name: Branch Protection
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  enforce-tests:
+    name: Enforce Test Requirements
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR requirements
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            // Check if this is a draft PR
+            if (pr.draft) {
+              core.setFailed('Cannot merge draft PRs. Please mark as ready for review.');
+              return;
+            }
+
+            // Check if PR has a proper title
+            if (!pr.title || pr.title.length < 5) {
+              core.setFailed('PR title must be at least 5 characters long.');
+              return;
+            }
+
+            // Check if PR has a description
+            if (!pr.body || pr.body.trim().length < 10) {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '⚠️ **Warning:** This PR has a very short or missing description. Please add more details about your changes.'
+              });
+            }
+
+            console.log('✅ PR meets basic requirements');
+
+  status-check:
+    name: Required Status Check
+    runs-on: ubuntu-latest
+    needs: enforce-tests
+
+    steps:
+      - name: Set status
+        run: |
+          echo "This job ensures PR requirements are met before tests run"
+          echo "Status: Ready for testing"

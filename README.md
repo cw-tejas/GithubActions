@@ -77,12 +77,43 @@ The project includes:
 
 See [TEST_DOCUMENTATION.md](./TEST_DOCUMENTATION.md) for detailed testing information.
 
+## CI/CD Pipeline
+
+This project uses **GitHub Actions** for automated testing and deployment:
+
+### 🤖 Automated Workflow
+
+- **Pull Request Testing**: All PRs to `main` branch automatically run the full test suite
+- **Manual Merge Control**: Comment `:runMerge` to trigger merge with unit tests
+- **Merge Blocking**: PRs with failing tests cannot be merged
+- **Real-time Feedback**: Detailed test results and coverage reports posted as PR comments
+
+### ⚡ Quick Start for Contributors
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make changes and add tests
+4. Push and create a pull request
+5. Watch automated tests run and receive feedback
+6. Comment `:runMerge` to merge when tests pass! 🎉
+
+### 📊 What Gets Tested
+
+- ESLint code quality checks
+- 35+ comprehensive unit tests
+- Integration and performance tests
+- Production build validation
+- Test coverage reporting
+
+See [GITHUB_ACTIONS_DOCS.md](./GITHUB_ACTIONS_DOCS.md) for complete CI/CD documentation.
+
 ## Technologies Used
 
 - **React** - UI library
 - **Vite** - Build tool and development server
 - **Vitest** - Testing framework
 - **React Testing Library** - Component testing utilities
+- **GitHub Actions** - CI/CD pipeline automation
 - **CSS3** - Styling with gradients and animations
 - **ESLint** - Code linting
 
