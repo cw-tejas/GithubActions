@@ -81,7 +81,7 @@
 }
 
 .btn-increment {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
+  background: linear-gradient(135deg, #4caf50, #45a049);
   color: white;
 }
 
@@ -113,26 +113,26 @@
   .app h1 {
     font-size: 2rem;
   }
-  
+
   .counter-value {
     font-size: 3rem;
   }
-  
+
   .counter-display {
     width: 120px;
     height: 120px;
   }
-  
+
   .btn {
     padding: 0.8rem 1.5rem;
     font-size: 1.2rem;
   }
-  
+
   .button-group {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .btn {
     width: 100%;
     max-width: 200px;
