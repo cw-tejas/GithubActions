@@ -10,7 +10,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>React Counter App</h1>
+      <h1>React Counter App!</h1>
       <div className="counter-container">
         <div className="counter-display">
           <span className="counter-value">{count}</span>
