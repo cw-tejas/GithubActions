@@ -26,12 +26,10 @@ describe("App Component", () => {
     expect(decrementButton).toBeInTheDocument();
     expect(resetButton).toBeInTheDocument();
   });
-
   test("increments counter when + button is clicked", () => {
     render(<App />);
 
     const incrementButton = screen.getByText("+");
-    const counterValue = screen.getByText("0");
 
     fireEvent.click(incrementButton);
 

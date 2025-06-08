@@ -16,10 +16,8 @@ describe("Counter App Performance Tests", () => {
     const renderTime = endTime - startTime;
 
     // Component should render in less than 100ms
-    expect(renderTime).toBeLessThan(100);
-
-    // Verify basic elements are present
-    expect(screen.getByText("React Counter App")).toBeInTheDocument();
+    expect(renderTime).toBeLessThan(100);    // Verify basic elements are present
+    expect(screen.getByText("React Counter App!")).toBeInTheDocument();
     expect(screen.getByText("0")).toBeInTheDocument();
   });
 
