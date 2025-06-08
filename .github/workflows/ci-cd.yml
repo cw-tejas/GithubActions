@@ -91,7 +91,6 @@ jobs:
 
             ${testSummary}
 
-            ### Test Output Summary
             \`\`\`
             ${testOutput.split('\n').slice(-20).join('\n')}
             \`\`\`

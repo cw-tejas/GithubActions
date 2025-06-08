@@ -114,10 +114,10 @@ jobs:
 
             const testResult = '${{ steps.all-tests.outputs.result }}';
             const emoji = testResult === 'success' ? '✅' : '❌';
-            const status = testResult === 'success' ? 'PASSED' : 'FAILED';
+            const status = testResult === 'success' ? 'SUCCESS' : 'FAILED';
 
             const comment = `
-            ## ${emoji} Merge All Tests: ${status}
+            ## ${emoji} Merge: ${status}
 
             **Triggered by:** @${{ github.event.comment.user.login }} with \`:runMerge\` command
 
