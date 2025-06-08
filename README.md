@@ -79,31 +79,14 @@ See [TEST_DOCUMENTATION.md](./TEST_DOCUMENTATION.md) for detailed testing inform
 
 ## CI/CD Pipeline
 
-This project uses **GitHub Actions** for automated testing and deployment:
+This project uses **GitHub Actions** for automated testing and deployment. Comment `:runMerge` on pull requests to trigger automated merge after tests pass.
 
-### 🤖 Automated Workflow
+**Key Features:**
 
-- **Pull Request Testing**: All PRs to `main` branch automatically run the full test suite
-- **Manual Merge Control**: Comment `:runMerge` to trigger merge with unit tests
-- **Merge Blocking**: PRs with failing tests cannot be merged
-- **Real-time Feedback**: Detailed test results and coverage reports posted as PR comments
-
-### ⚡ Quick Start for Contributors
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Make changes and add tests
-4. Push and create a pull request
-5. Watch automated tests run and receive feedback
-6. Comment `:runMerge` to merge when tests pass! 🎉
-
-### 📊 What Gets Tested
-
-- ESLint code quality checks
-- 35+ comprehensive unit tests
-- Integration and performance tests
-- Production build validation
-- Test coverage reporting
+- 🤖 Automated testing on every PR
+- 🔒 Merge blocking when tests fail
+- ⚡ Manual merge control with `:runMerge` command
+- 📊 35+ comprehensive tests with coverage reports
 
 See [GITHUB_ACTIONS_DOCS.md](./GITHUB_ACTIONS_DOCS.md) for complete CI/CD documentation.
 
