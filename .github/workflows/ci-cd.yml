@@ -53,11 +53,9 @@ jobs:
       - name: Generate test coverage
         if: always()
         run: |
-          npm run test:coverage -- --reporter=json --reporter=text > coverage-output.log 2>&1 || true
-
-      - name: Upload test results
+          npm run test:coverage -- --reporter=json --reporter=text > coverage-output.log 2>&1 || true      - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: |
@@ -156,10 +154,8 @@ jobs:
           PID=$!
           sleep 5
           curl -f http://localhost:4173 || exit 1
-          kill $PID
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+          kill $PID      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: production-build
           path: dist/
