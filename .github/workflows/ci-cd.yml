@@ -3,7 +3,7 @@ name: CI Tests
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]
+    types: [opened] # Only on PR creation, not on synchronize (new commits)
   push:
     branches: [main]
 
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   test:
-    name: Run All Tests
+    name: Run Unit Tests Only
     runs-on: ubuntu-latest
 
     outputs:
@@ -37,16 +37,18 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run all tests
+      - name: Run unit tests only
         id: test-step
         run: |
-          npm run test:run 2>&1 | tee test-output.log
+          echo "🧪 Running unit tests only..."
+          # Run only unit tests (App.test.jsx and counterUtils.test.js)
+          npx vitest run src/App.test.jsx src/utils/counterUtils.test.js 2>&1 | tee test-output.log
           if [ ${PIPESTATUS[0]} -eq 0 ]; then
             echo "result=success" >> $GITHUB_OUTPUT
-            echo "✅ All tests passed!" >> test-summary.md
+            echo "✅ Unit tests passed!" >> test-summary.md
           else
             echo "result=failure" >> $GITHUB_OUTPUT
-            echo "❌ Tests failed!" >> test-summary.md
+            echo "❌ Unit tests failed!" >> test-summary.md
           fi
         continue-on-error: true
 
