@@ -41,8 +41,8 @@ jobs:
         id: test-step
         run: |
           echo "🧪 Running unit tests only..."
-          # Run only unit tests (App.test.jsx and counterUtils.test.js)
-          npx vitest run src/App.test.jsx src/utils/counterUtils.test.js 2>&1 | tee test-output.log
+          # Run only unit tests with clean output (no colors/ANSI codes)
+          npx vitest run src/App.test.jsx src/utils/counterUtils.test.js --reporter=verbose --no-color 2>&1 | tee test-output.log
           if [ ${PIPESTATUS[0]} -eq 0 ]; then
             echo "result=success" >> $GITHUB_OUTPUT
             echo "✅ Unit tests passed!" >> test-summary.md
@@ -52,11 +52,6 @@ jobs:
           fi
         continue-on-error: true
 
-      - name: Generate test coverage
-        if: always()
-        run: |
-          npm run test:coverage -- --reporter=json --reporter=text > coverage-output.log 2>&1 || true
-
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
@@ -64,7 +59,6 @@ jobs:
           name: test-results
           path: |
             test-output.log
-            coverage-output.log
             test-summary.md
 
       - name: Comment test results on PR
@@ -76,10 +70,17 @@ jobs:
 
             let testOutput = '';
             let testSummary = '';
-            let coverageInfo = '';
 
             try {
               testOutput = fs.readFileSync('test-output.log', 'utf8');
+              // Clean up any remaining ANSI codes and excessive whitespace
+              testOutput = testOutput
+                .replace(/\x1b\[[0-9;]*m/g, '') // Remove ANSI escape codes
+                .replace(/\s+$/gm, '') // Remove trailing whitespace
+                .split('\n')
+                .filter(line => line.trim() !== '') // Remove empty lines
+                .slice(-15) // Take last 15 meaningful lines
+                .join('\n');
             } catch (e) {
               testOutput = 'No test output available';
             }
@@ -90,37 +91,27 @@ jobs:
               testSummary = 'No test summary available';
             }
 
-            try {
-              coverageInfo = fs.readFileSync('coverage-output.log', 'utf8');
-            } catch (e) {
-              coverageInfo = 'No coverage info available';
-            }
-
             const testResult = '${{ steps.test-step.outputs.result }}';
             const emoji = testResult === 'success' ? '✅' : '❌';
             const status = testResult === 'success' ? 'PASSED' : 'FAILED';
-              const comment = `
-            ## ${emoji} Test Results: ${status}
+
+            const comment = `
+            ## ${emoji} Unit Tests: ${status}
 
             ${testSummary}
 
-            ### Test Output Summary
+            ### Clean Test Output
             \`\`\`
-            ${testOutput.split('\n').slice(-20).join('\n')}
-            \`\`\`
-
-            ### Coverage Information
-            \`\`\`
-            ${coverageInfo.split('\n').slice(0, 10).join('\n')}
+            ${testOutput}
             \`\`\`
 
             ${testResult === 'failure' ? 
-              '⚠️ **This PR cannot be merged until all tests pass.**' : 
-              '🎉 **All tests passed! This PR is ready for review.**\n\n💡 **To merge this PR:** Comment `:runMerge` to trigger merge with unit tests.'
+              '⚠️ **This PR cannot be merged until all unit tests pass.**' : 
+              '🎉 **Unit tests passed! This PR is ready for review.**\n\n💡 **To merge this PR:** Comment `:runMerge` to trigger all tests and merge.'
             }
 
             ---
-            *Automated test run for commit ${context.sha.substring(0, 7)}*
+            *Automated unit test run for commit ${context.sha.substring(0, 7)}*
             `;
 
             github.rest.issues.createComment({
