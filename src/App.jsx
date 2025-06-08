@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Header from "./components/Header";
 import "./App.css";
 
 function App() {
@@ -7,10 +8,9 @@ function App() {
   const increment = () => setCount(count + 1);
   const decrement = () => setCount(count - 1);
   const reset = () => setCount(0);
-
   return (
     <div className="app">
-      <h1>React Counter App!</h1>
+      <Header title="React Counter App!" />
       <div className="counter-container">
         <div className="counter-display">
           <span className="counter-value">{count}</span>
