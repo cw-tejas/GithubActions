@@ -8,6 +8,7 @@ function App() {
   const increment = () => setCount(count + 1);
   const decrement = () => setCount(count - 1);
   const reset = () => setCount(0);
+
   return (
     <div className="app">
       <Header title="React Counter App!" />
