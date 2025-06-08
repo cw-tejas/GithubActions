@@ -198,8 +198,7 @@ jobs:
                 repo: context.repo.repo,
                 body: `❌ **Merge failed:** ${error.message}\n\nPlease resolve the issue and try again with \`:runMerge\`.`
               });
-              
-              // React to the original comment with failure
+                // React to the original comment with failure
               await github.rest.reactions.createForIssueComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -213,8 +212,8 @@ jobs:
   merge-failed:
     name: Handle Merge Failure
     runs-on: ubuntu-latest
-    needs: [check-comment, run-unit-tests]
-    if: needs.run-unit-tests.outputs.test-result == 'failure'
+    needs: [check-comment, run-all-tests]
+    if: needs.run-all-tests.outputs.test-result == 'failure'
 
     steps:
       - name: Comment merge failure
