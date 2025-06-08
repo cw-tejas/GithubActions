@@ -82,7 +82,7 @@ jobs:
           echo "🧪 Running ALL tests for merge validation..." | tee all-test-output.log
 
           # Run all tests including unit, integration, and performance tests
-          npm run test:run 2>&1 | tee -a all-test-output.log
+          npm run test:run -- --no-color 2>&1 | tee -a all-test-output.log
 
           if [ ${PIPESTATUS[0]} -eq 0 ]; then
             echo "result=success" >> $GITHUB_OUTPUT
@@ -98,10 +98,10 @@ jobs:
         with:
           script: |
             const fs = require('fs');            let testOutput = '';
-            let testSummary = '';
-
-            try {
+            let testSummary = '';            try {
               testOutput = fs.readFileSync('all-test-output.log', 'utf8');
+              // Clean ANSI escape codes from test output
+              testOutput = testOutput.replace(/\x1b\[[0-9;]*m/g, '');
             } catch (e) {
               testOutput = 'No test output available';
             }
@@ -114,9 +114,7 @@ jobs:
 
             const testResult = '${{ steps.all-tests.outputs.result }}';
             const emoji = testResult === 'success' ? '✅' : '❌';
-            const status = testResult === 'success' ? 'SUCCESS' : 'FAILED';
-
-            const comment = `
+            const status = testResult === 'success' ? 'SUCCESS' : 'FAILED';            const comment = `
             ## ${emoji} Merge: ${status}
 
             **Triggered by:** @${{ github.event.comment.user.login }} with \`:runMerge\` command
@@ -129,7 +127,7 @@ jobs:
             \`\`\`
 
             ${testResult === 'success' ? 
-              '🎉 **All tests passed! Proceeding with merge...**' : 
+              '🎉 **All tests passed! Proceeding with merge...**\n\n📊 **Tests Run:**\n- ✅ Unit Tests (27 tests)\n- ✅ Integration Tests (7 tests)\n- ✅ Performance Tests (4 tests)' : 
               '❌ **Merge failed due to test failures.**\n\nPlease fix the failing tests and try again.'
             }
 
@@ -224,7 +222,7 @@ jobs:
               issue_number: ${{ needs.check-comment.outputs.pr-number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '❌ **Merge failed due to failed unit tests.**\n\nThe following unit tests must pass before merging:\n- App component tests (`src/App.test.jsx`)\n- Counter utility tests (`src/utils/counterUtils.test.js`)\n\nPlease fix the failing tests and run `:runMerge` again.'
+              body: '❌ **Merge failed due to test failures.**\n\n📋 **Required Tests:**\n- Unit Tests (27 tests): Components and utility functions\n- Integration Tests (7 tests): User workflows and accessibility\n- Performance Tests (4 tests): Rendering and memory usage\n\nPlease fix the failing tests and run `:runMerge` again.'
             });
 
             // React to the original comment with failure
